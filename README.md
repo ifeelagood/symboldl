@@ -12,5 +12,6 @@ This script utilises the `symchk` tool to download the symbols to `SYMBOL_CACHE`
 ## Usage
 `.\symboldl.ps1 <path to executable>`
 
-or, for iterating through `executables.txt`:
+or, for iterating through `executables.txt`
+
 `ForEach ($exe in Get-Content .\executables.txt) { .\symboldl.ps1 $exe }`
