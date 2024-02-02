@@ -5,7 +5,6 @@ import pathlib
 import subprocess
 import typing
 
-DEFAULT_SYMCHK_PATH = "C:/Program Files (x86)/Windows Kits/10/Debuggers/x64/symchk.exe"
 
 # ordered in priority, as we should really stop once we find all the executables
 EXECUTABLE_EXTENSIONS = (".dll", ".exe")
@@ -73,7 +72,6 @@ def find_executables(symbols : list) -> list:
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Find executables from a Visual Studio 22 symbol cache directory. If SYMBOL_CACHE environment variable is set and symchk is found, arguments are not needed and this dialog will be skipped.")
     parser.add_argument("symcache_path", type=pathlib.Path,  help="Path to the Visual Studio 22 symbol cache directory")
-    parser.add_argument("--symchk_path", type=pathlib.Path, default=DEFAULT_SYMCHK_PATH, help="Path to symchk.exe")
     parser.add_argument("-o", "--output", type=pathlib.Path, default="executables.txt", help="Output file for executables")
     parser.add_argument()
     return parser.parse_args()
@@ -83,10 +81,9 @@ def get_args() -> argparse.Namespace:
     if len(sys.argv) > 1:
         args = parse_args()
     
-    elif "SYMBOL_CACHE" in os.environ and os.path.isdir(os.environ["SYMBOL_CACHE"]) and os.path.isfile(DEFAULT_SYMCHK_PATH):
+    elif "SYMBOL_CACHE" in os.environ and os.path.isdir(os.environ["SYMBOL_CACHE"]):
         args = argparse.Namespace(
             symcache_path=pathlib.Path(os.environ["SYMBOL_CACHE"]), 
-            symchk_path=pathlib.Path(DEFAULT_SYMCHK_PATH),
             output=pathlib.Path("executables.txt")
         )
 
