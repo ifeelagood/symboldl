@@ -1,5 +1,11 @@
 I wanted offline versions of the symbols for Visual Studio 2022. 
 
+The scripts assume that 
+1. `symchk` is installed at the default location (`C:\Program Files (x86)\Windows Kits\10\Debuggers\x64\symchk.exe`)
+2. The `SYMSTORE_PATH` environment variable is set to the path of the symbol store, i.e. one managed by visual studio.
+3. The `SYMCACHE_PATH` environment variable is set to the path of the symcache folder, for unmanaged symbols.
+
+
 # symcache2executables.py
 This script will search for all executables matching the symbol files in the symcache folder, then write the results to a file.
 

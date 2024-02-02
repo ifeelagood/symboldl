@@ -29,12 +29,12 @@ def where(path : str, pattern : str, recursive : bool = True) -> typing.List[pat
     
     return [pathlib.Path(p) for p in result.stdout.splitlines()]
 
-def symcache2symbols(symcache_path : pathlib.Path) -> list:
-    """From a Visual Studio 22 symbol cache directory, return a list of symbols"""
+def symstore2symbols(symstore_path : pathlib.Path) -> list:
+    """From a Visual Studio 22 symbol cache directory/symstore.exe dir, return a list of symbols"""
     
     symbols = []
     
-    for file in symcache_path.iterdir():
+    for file in symstore_path.iterdir():
         if file.suffix == ".pdb":
             symbols.append(file)
             
@@ -70,10 +70,10 @@ def find_executables(symbols : list) -> list:
     return executables
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Find executables from a Visual Studio 22 symbol cache directory. If SYMBOL_CACHE environment variable is set and symchk is found, arguments are not needed and this dialog will be skipped.")
-    parser.add_argument("symcache_path", type=pathlib.Path,  help="Path to the Visual Studio 22 symbol cache directory")
+    parser = argparse.ArgumentParser(description="Find executables from a symstore symbol cache directory. If SYMSTORE_PATH environment variable is set and symchk is found, arguments are not needed and this dialog will be skipped.")
+    parser.add_argument("symstore_path", type=pathlib.Path,  help="Path to the symstore.exe managed symbol cache directory.")
     parser.add_argument("-o", "--output", type=pathlib.Path, default="executables.txt", help="Output file for executables")
-    parser.add_argument()
+
     return parser.parse_args()
 
 def get_args() -> argparse.Namespace:
@@ -81,9 +81,9 @@ def get_args() -> argparse.Namespace:
     if len(sys.argv) > 1:
         args = parse_args()
     
-    elif "SYMBOL_CACHE" in os.environ and os.path.isdir(os.environ["SYMBOL_CACHE"]):
+    elif "SYMSTORE_PATH" in os.environ and os.path.isdir(os.environ["SYMSTORE_PATH"]):
         args = argparse.Namespace(
-            symcache_path=pathlib.Path(os.environ["SYMBOL_CACHE"]), 
+            symcache_path=pathlib.Path(os.environ["SYMSTORE_PATH"]), 
             output=pathlib.Path("executables.txt")
         )
 
@@ -94,7 +94,7 @@ def get_args() -> argparse.Namespace:
         
 def main():
     args = get_args()
-    symbols = symcache2symbols(args.symcache_path)
+    symbols = symstore2symbols(args.symcache_path)
     executables = find_executables(symbols)
         
     with open(args.output, "w") as f:

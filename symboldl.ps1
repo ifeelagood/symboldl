@@ -8,9 +8,9 @@ if ($executable -eq $null -or $executable -eq "" -or -not (Test-Path $executable
     exit 1
 }
 
-# check SYMBOL_CACHE environment variable
-if ($env:SYMBOL_CACHE -eq $null -or $env:SYMBOL_CACHE -eq "") {
-    echo "SYMBOL_CACHE environment variable not set"
+# check SYMSTORE_PATH environment variable
+if ($env:SYMSTORE_PATH -eq $null -or $env:SYMSTORE_PATH -eq "") {
+    echo "SYMSTORE_PATH environment variable not set"
     exit 1
 }
 
@@ -26,6 +26,6 @@ if ($symchk -eq $null -or $symchk -eq "" -or -not (Test-Path $symchk)) {
 
 # download symbols
 $symbol_server = "https://msdl.microsoft.com/download/symbols"
-$cmd = "& `"$symchk`" /r `"$executable`" /s `"$symbol_server`" /od /oc `"$env:SYMBOL_CACHE`""
+$cmd = "& `"$symchk`" /r `"$executable`" /s `"$symbol_server`" /od /oc `"$env:SYMSTORE_PATH`""
 
 Invoke-Expression $cmd
